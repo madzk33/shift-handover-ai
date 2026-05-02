@@ -22,11 +22,30 @@ Multiply this across three shifts, multiple production lines, QC stations, and p
 - **Validates output** against a strict Pydantic schema — no hallucinated fields, no missing structure
 - **Stores every handover** in a local SQLite database for history and audit
 - **Exports in two formats**: clean Markdown document and Slack-ready formatted message
-- **Handles voice input** via OpenAI Whisper transcription (optional)
+
+## How It Works
+
+**Input — messy, low-friction:**
+
+![Input screen](docs/screenshots/01-input.png)
+
+The operative just dumps notes. No forms, no fields, no friction. The textarea accepts whatever they actually write at the end of a shift — incomplete sentences, shorthand, mixed terminology.
+
+**Output — structured and scannable:**
+
+![Structured handover](docs/screenshots/02-structured-output.png)
+
+The LLM extracts severity-ranked issues, pending items, equipment status, stock notes, and a ranked list of priorities for the next shift. Where the operative didn't specify an owner or deadline, the system marks it `unspecified` rather than inventing one — a hard rule in the system prompt.
+
+**Delivery — Slack-ready:**
+
+![Slack format](docs/screenshots/03-slack-format.png)
+
+One-click export to a Slack-formatted message or downloadable Markdown report, ready to paste into a shift channel.
 
 ## Architecture
 
-```
+\`\`\`
 ┌─────────────────────────────────────────────────────────┐
 │                   Streamlit UI (app.py)                  │
 │  ┌──────────┐  ┌──────────┐  ┌────────┐  ┌───────────┐ │
@@ -63,7 +82,7 @@ Multiply this across three shifts, multiple production lines, QC stations, and p
                   │  (Slack + Markdown   │
                   │   formatters)        │
                   └──────────────────────┘
-```
+\`\`\`
 
 ## Tech Stack
 
@@ -72,14 +91,14 @@ Multiply this across three shifts, multiple production lines, QC stations, and p
 - **Groq API** — LLM inference (Llama 3.3 70B Versatile)
 - **OpenAI Whisper** — voice-to-text transcription (optional)
 - **Pydantic v2** — schema validation
-- **SQLite** — local storage (stdlib `sqlite3`)
+- **SQLite** — local storage (stdlib \`sqlite3\`)
 - **python-dotenv** — environment variable management
 
 ## Quickstart
 
-```bash
+\`\`\`bash
 # 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/shift-handover-ai.git
+git clone https://github.com/madzk33/shift-handover-ai.git
 cd shift-handover-ai
 
 # 2. Create a virtual environment
@@ -95,23 +114,23 @@ cp .env.example .env
 
 # 5. Run the app
 streamlit run app.py
-```
+\`\`\`
 
-The app will open at `http://localhost:8501`.
+The app will open at \`http://localhost:8501\`.
 
 ## Example
 
 **Raw input:**
-```
+\`\`\`
 line 3 ran ok mostly. had issue with the sealer around 11am, fixed by 11:45
 but lost about 200 units. mike from maintenance came down. flagged for proper
 service next week. stock of brown rice is low — only one pallet left. evening
 shift needs to know. also the temp probe in fridge 2 was reading 6 degrees at
 one point, brought it back down but keep eye on it.
-```
+\`\`\`
 
 **Structured output (JSON):**
-```json
+\`\`\`json
 {
   "shift_date": "2025-01-15",
   "shift_type": "Day",
@@ -161,7 +180,7 @@ one point, brought it back down but keep eye on it.
     "Do not use sealer on Line 3 without checking maintenance status"
   ]
 }
-```
+\`\`\`
 
 ## What I'd Build Next
 
@@ -174,4 +193,6 @@ one point, brought it back down but keep eye on it.
 
 ## Why I Built This
 
-<!-- TODO: author writes this section by hand -->
+I work in QC/Production at Frive. Shift handovers are a daily friction point I see firsthand — verbal updates get forgotten, scribbled notes get lost, and the next shift rediscovers issues we already knew about.
+
+This is a working prototype of how I'd solve it: keep the input as low-friction as possible (just dump notes), and let the LLM do the structuring work humans don't want to do at the end of a 12-hour shift. Built in a day to demonstrate applied AI/automation skills against real operational problems I encounter at work.
