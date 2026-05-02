@@ -45,15 +45,14 @@ One-click export to a Slack-formatted message or downloadable Markdown report, r
 
 ## Architecture
 
-\`\`\`
+```
 ┌─────────────────────────────────────────────────────────┐
-│                   Streamlit UI (app.py)                  │
+│                   Streamlit UI (app.py)                 │
 │  ┌──────────┐  ┌──────────┐  ┌────────┐  ┌───────────┐ │
 │  │ Metadata │  │Raw Notes │  │ Voice  │  │  History  │ │
 │  │ Sidebar  │  │Text Area │  │Upload  │  │   Tab     │ │
 │  └────┬─────┘  └────┬─────┘  └───┬────┘  └─────┬─────┘ │
-│       │              │            │              │       │
-└───────┼──────────────┼────────────┼──────────────┼───────┘
+└───────┼──────────────┼────────────┼──────────────┼─────┘
         │              │            │              │
         │              │     ┌──────▼──────┐       │
         │              │     │  OpenAI     │       │
@@ -63,26 +62,24 @@ One-click export to a Slack-formatted message or downloadable Markdown report, r
         │              │            │              │
         │         ┌────▼────────────▼────┐         │
         └────────►│  handover_engine.py  │         │
-                  │  (Groq LLM call)     │         │
+                  │   (Groq LLM call)    │         │
                   └──────────┬───────────┘         │
                              │                     │
                   ┌──────────▼───────────┐         │
-                  │  schema.py           │         │
-                  │  (Pydantic v2        │         │
-                  │   validation)        │         │
+                  │       schema.py      │         │
+                  │  (Pydantic v2)       │         │
                   └──────────┬───────────┘         │
                              │                     │
                   ┌──────────▼───────────┐         │
-                  │  storage.py          │◄────────┘
-                  │  (SQLite)            │
+                  │      storage.py      │◄────────┘
+                  │       (SQLite)       │
                   └──────────┬───────────┘
                              │
                   ┌──────────▼───────────┐
-                  │  slack_mock.py       │
-                  │  (Slack + Markdown   │
-                  │   formatters)        │
+                  │    slack_mock.py     │
+                  │  (Slack + Markdown)  │
                   └──────────────────────┘
-\`\`\`
+```
 
 ## Tech Stack
 
